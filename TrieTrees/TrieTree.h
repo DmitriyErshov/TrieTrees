@@ -20,7 +20,7 @@ public:
 	void deleteTree();
 private:
 	void deleteNode(Node* node);
-	void searchLetterRec(char c, Node* node, Node* lastForkNode, int lastForkNodeChild);
+	void searchLetterRec(char searchedChar, Node* node, Node* lastForkNode, int lastForkNodeChild, Node* parentNode, int parentNodeChild, char childChar);
 	void printGraphic(Node* node, int h);
 	void addRec(string key, int index, Node* tempNode);
 	void recPreOrderWithPrint(Node* node, char c);

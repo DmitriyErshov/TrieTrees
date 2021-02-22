@@ -23,13 +23,13 @@ void TrieTree::printGraphic()
 
 Node* TrieTree::searchLetter(char c)
 {
-	searchLetterRec(c, root, nullptr, -1);
-	for (int i = 0; i < list.getSize(); i++)
+	searchLetterRec(c, root, nullptr, -1, nullptr, -1, ' ');
+	/*for (int i = 0; i < list.getSize(); i++)
 	{
 		pair tempForDeleting = list.deleteElement();
 		Node* temp = tempForDeleting.node;
 		temp->childs[tempForDeleting.index] = nullptr;
-	}
+	}*/
 	return nullptr;
 }
 
@@ -52,7 +52,8 @@ void TrieTree::deleteNode(Node* node)
 	}
 }
 
-void TrieTree::searchLetterRec(char searchedChar, Node* node, Node* lastForkNode, int lastForkNodeChild, char childChar)
+void TrieTree::searchLetterRec(char searchedChar, Node* node, Node* lastForkNode, int lastForkNodeChild,
+	Node* parentNode, int parentNodeChild, char childChar)
 {
 
 	if (node != nullptr) {
@@ -66,35 +67,41 @@ void TrieTree::searchLetterRec(char searchedChar, Node* node, Node* lastForkNode
 				if (childsCount == 2) {
 					isFork = true;
 					break;
-				}
-					
+				}	
 			}
 		}
 
 
-		//if (node->s == c) {
-		//	//удаляем всё что ниже 
-		//	deleteNode(node);
-		//	node = nullptr;
-		//	//добавляем forkNode в список на расстрел
-		//	list.add(lastForkNode, lastForkNodeChild);
-		//	return;
-		//}
-		//else {
-		//	bool wasFounded = false;
-		//	for (int i = 0; i < alphabetLettersNum; i++)
-		//	{
-		//		if (node->childs[i] != nullptr) {
-		//			wasFounded = true;
-		//			if (isFork) {
-		//				lastForkNode = node;
-		//				lastForkNodeChild = i;
-		//			}
-		//			return searchLetterRec(c, node->childs[i], lastForkNode, lastForkNodeChild);
-		//		}
-		//	}
+		if (childChar == searchedChar) {
+			//мы нашли нужную букву и удаляем всё что ниже 
+			deleteNode(node);
+			parentNode->childs[parentNodeChild] = nullptr;
+			//добавляем forkNode в список на расстрел
+			//list.add(lastForkNode, lastForkNodeChild);
+			//return;
+		}
+		else {
+			bool wasFounded = false;
+			for (int i = 0; i < alphabetLettersNum; i++)
+			{
+				if (node->childs[i] != nullptr) {
+					wasFounded = true;
+					if (isFork) {
+						lastForkNode = node;
+						lastForkNodeChild = i;
+					}
+					childChar = 'a' + i;
+					searchLetterRec(searchedChar, node->childs[i], lastForkNode, lastForkNodeChild, node, i, childChar);
 
-		//}
+					//если у узла не будет потомков, но при этом isEnd == false, удаляем всё, что ниже fork узла
+					if (!node->hasChilds(1) && node->isEnd == false) {
+						deleteNode(lastForkNode->childs[lastForkNodeChild]);
+						parentNode->childs[parentNodeChild] = nullptr;
+						return;
+					}
+				}
+			}
+		}
 	}
 	
 }
@@ -126,7 +133,7 @@ void TrieTree::addRec(string key, int index, Node* tempNode)
 	//проверяем достигнут ли конец ключа
 	if (index + 1 == key.length()) {
 		tempNode->childs[insertIndex] = new Node();
-		//tempNode->childs[insertIndex]->s = key[index];
+		tempNode->childs[insertIndex]->s = key[index];
 		tempNode->childs[insertIndex]->isEnd = true;
 		return;
 	}
@@ -146,7 +153,7 @@ void TrieTree::addRec(string key, int index, Node* tempNode)
 		}
 		else {
 			tempNode->childs[insertIndex] = new Node();
-			//tempNode->childs[insertIndex]->s = key[index];
+			tempNode->childs[insertIndex]->s = key[index];
 			addRec(key, index + 1, tempNode->childs[insertIndex]);
 		}
 

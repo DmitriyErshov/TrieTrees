@@ -17,11 +17,13 @@ int main() {
 	//trieTree.add("in");
 	//trieTree.add("int");
 	//trieTree.add("into");
-	//trieTree.print();
-	
-	//trieTree.searchLetter('o');
-
 	trieTree.printGraphic();
 	
+	trieTree.searchLetter('f');
+
+	cout << "____________________________________________________________" << endl;
+	trieTree.printGraphic();
+	
+
 	return 0;
 }
