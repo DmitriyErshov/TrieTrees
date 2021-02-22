@@ -9,14 +9,14 @@ int main() {
 	trieTree.add("fat");
 
 	//Node* search = trieTree.searchLetter('o');
-	/*trieTree.add("to");
-	trieTree.add("tea");
-	trieTree.add("ted");
-	trieTree.add("ten");
-	trieTree.add("it");
-	trieTree.add("in");
-	trieTree.add("int");
-	trieTree.add("into");*/
+	//trieTree.add("to");
+	//trieTree.add("tea");
+	//trieTree.add("ted");
+	//trieTree.add("ten");
+	//trieTree.add("it");
+	//trieTree.add("in");
+	//trieTree.add("int");
+	//trieTree.add("into");
 	//trieTree.print();
 	
 	//trieTree.searchLetter('o');

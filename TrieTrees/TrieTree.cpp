@@ -18,7 +18,7 @@ void TrieTree::print()
 void TrieTree::printGraphic()
 {
 	char c = ' ';
-	printGraphic(root, height + 1, c);
+	printGraphic(root, height + 1);
 }
 
 Node* TrieTree::searchLetter(char c)
@@ -52,7 +52,7 @@ void TrieTree::deleteNode(Node* node)
 	}
 }
 
-void TrieTree::searchLetterRec(char c, Node* node, Node* lastForkNode, int lastForkNodeChild)
+void TrieTree::searchLetterRec(char searchedChar, Node* node, Node* lastForkNode, int lastForkNodeChild, char childChar)
 {
 
 	if (node != nullptr) {
@@ -99,7 +99,7 @@ void TrieTree::searchLetterRec(char c, Node* node, Node* lastForkNode, int lastF
 	
 }
 
-void TrieTree::printGraphic(Node* node, int h, char c)
+void TrieTree::printGraphic(Node* node, int h)
 {
 	if (node != NULL)
 	{
@@ -107,7 +107,7 @@ void TrieTree::printGraphic(Node* node, int h, char c)
 		{
 			if (node->childs[i] != nullptr) {
 				char c = 'a' + i;
-				printGraphic(node->childs[i], h + 1, c);
+				printGraphic(node->childs[i], h + 1);
 
 				for (int i = 1; i <= h; i++)
 					cout << '\t';

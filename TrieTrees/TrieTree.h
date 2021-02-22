@@ -21,7 +21,7 @@ public:
 private:
 	void deleteNode(Node* node);
 	void searchLetterRec(char c, Node* node, Node* lastForkNode, int lastForkNodeChild);
-	void printGraphic(Node* node, int h, char c);
+	void printGraphic(Node* node, int h);
 	void addRec(string key, int index, Node* tempNode);
 	void recPreOrderWithPrint(Node* node, char c);
 
