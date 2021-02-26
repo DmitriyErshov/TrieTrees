@@ -2,6 +2,8 @@
 #include "utills.h"
 #include "NodeList.h"
 #include "Node.h"
+#include "frontend.h"
+#include "QueueArray.h"
 
 class TrieTree
 {
@@ -16,6 +18,7 @@ public:
 	void add(string key);
 	void print();
 	void printGraphic();
+	void nicePrintGraphic();
 	Node* searchLetter(char c);
 	void deleteTree();
 private:

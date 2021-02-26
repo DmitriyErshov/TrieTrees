@@ -139,13 +139,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="frontend.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NodeList.cpp" />
+    <ClCompile Include="QueueArray.cpp" />
     <ClCompile Include="TrieTree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="frontend.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeList.h" />
+    <ClInclude Include="QueueArray.h" />
     <ClInclude Include="TrieTree.h" />
     <ClInclude Include="utills.h" />
   </ItemGroup>
