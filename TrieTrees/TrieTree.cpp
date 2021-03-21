@@ -10,10 +10,36 @@ void TrieTree::add(string key)
 	}
 }
 
+void TrieTree::addRec(string key, int index, Node* tempNode)
+{
+	int insertIndex = key[index] - 'a';
+
+	//проверяем достигнут ли конец ключа
+	if (index + 1 == key.length()) {
+		if (tempNode->childs[insertIndex] == nullptr) {
+			tempNode->childs[insertIndex] = new Node();
+		}
+		//tempNode->childs[insertIndex]->s = key[index];
+		tempNode->childs[insertIndex]->isEnd = true;
+		tempNode->childs[insertIndex]->counter = tempNode->childs[insertIndex]->counter + 1;
+		return;
+	}
+	else {
+		if (tempNode->childs[insertIndex] != nullptr) {
+			addRec(key, index + 1, tempNode->childs[insertIndex]);
+		}
+		else {
+			tempNode->childs[insertIndex] = new Node();
+			//tempNode->childs[insertIndex]->s = key[index];
+			addRec(key, index + 1, tempNode->childs[insertIndex]);
+		}
+	}
+}
+
 void TrieTree::print()
 {
 	char c = ' ';
-	recPreOrderWithPrint(root, c);
+	recPreOrderWithPrint(root, c, "");
 }
 
 void TrieTree::printGraphic()
@@ -52,143 +78,22 @@ void TrieTree::printGraphic(Node* node, int h)
 
 
 
-Node* TrieTree::searchLetter(char c)
-{
-	searchLetterRec(c, root, nullptr, -1, nullptr, -1, ' ');
-	/*for (int i = 0; i < list.getSize(); i++)
-	{
-		pair tempForDeleting = list.deleteElement();
-		Node* temp = tempForDeleting.node;
-		temp->childs[tempForDeleting.index] = nullptr;
-	}*/
-	return nullptr;
-}
-
-void TrieTree::deleteTree()
-{
-	deleteNode(root);
-}
-
-void TrieTree::deleteNode(Node* node)
+void TrieTree::recPreOrderWithPrint(Node* node, char c, string prefix)
 {
 	if (node != nullptr) {
-		
-		for (int i = 0; i < alphabetLettersNum; i++)
-		{
-			if (node->childs[i] != nullptr) {
-				deleteNode(node->childs[i]);
-			}
-		}
-		delete node;
-	}
-}
-
-void TrieTree::searchLetterRec(char searchedChar, Node* node, Node* lastForkNode, int lastForkNodeChild,
-	Node* parentNode, int parentNodeChild, char childChar)
-{
-
-	if (node != nullptr) {
-		//проверим что узел являеся развилкой
-		bool isFork = false;
-		int childsCount = 0;
-		for (int i = 0; i < alphabetLettersNum; i++)
-		{
-			if (node->childs[i] != nullptr) {
-				childsCount++;
-				if (childsCount == 2) {
-					isFork = true;
-					break;
-				}	
-			}
-		}
-
-
-		if (childChar == searchedChar) {
-			//мы нашли нужную букву и удаляем всё что ниже 
-			deleteNode(node);
-			parentNode->childs[parentNodeChild] = nullptr;
+		if (node->isEnd) {
+			cout << prefix << " " << node->counter << endl;
+			return;
 		}
 		else {
-			bool wasFounded = false;
 			for (int i = 0; i < alphabetLettersNum; i++)
 			{
 				if (node->childs[i] != nullptr) {
-					wasFounded = true;
-					if (isFork) {
-						lastForkNode = node;
-						lastForkNodeChild = i;
-					}
-					childChar = 'a' + i;
-					searchLetterRec(searchedChar, node->childs[i], lastForkNode, lastForkNodeChild, node, i, childChar);
-
-					//если у узла не будет потомков, но при этом isEnd == false, удаляем всё, что ниже fork узла
-					if (!node->hasChilds(1) && node->isEnd == false) {
-						deleteNode(lastForkNode->childs[lastForkNodeChild]);
-						parentNode->childs[parentNodeChild] = nullptr;
-						return;
-					}
+					c = 'a' + i;
+					recPreOrderWithPrint(node->childs[i], c, prefix + c);
 				}
 			}
-		}
-	}
-	
-}
-
-
-void TrieTree::addRec(string key, int index, Node* tempNode)
-{
-	int insertIndex = key[index] - 'a';
-
-	//проверяем достигнут ли конец ключа
-	if (index + 1 == key.length()) {
-		tempNode->childs[insertIndex] = new Node();
-		//tempNode->childs[insertIndex]->s = key[index];
-		tempNode->childs[insertIndex]->isEnd = true;
-		tempNode->counter++;
-		return;
-	}
-	else {
-		bool wasFounded = false;
-		//ищем букву в 
-		/*int i;
-		for (i = 0; i < alphabetLettersNum; i++)
-		{
-			if (tempNode->childs[i] != nullptr && tempNode->childs[i]->s == key[index]) {
-				wasFounded = true;
-				break;
-			}
-		}*/
-		if (tempNode->childs[insertIndex] != nullptr) {
-			addRec(key, index + 1, tempNode->childs[insertIndex]);
-		}
-		else {
-			tempNode->childs[insertIndex] = new Node();
-			//tempNode->childs[insertIndex]->s = key[index];
-			addRec(key, index + 1, tempNode->childs[insertIndex]);
-		}
-
-		//if (!wasFounded) {
-		//	tempNode->childs[insertIndex] = new Node();
-		//	//tempNode->childs[insertIndex]->s = key[index];
-		//	addRec(key, index + 1, tempNode->childs[insertIndex]);
-		//}
-		//else {
-		//	addRec(key, index + 1, tempNode->childs[i]);
-		//}
-	}
-}
-
-void TrieTree::recPreOrderWithPrint(Node* node, char c)
-{
-	if (node != nullptr) {
-		cout << c << " ";
-		for (int i = 0; i < alphabetLettersNum; i++)
-		{
-			if (node->childs[i] != nullptr) {
-				c = 'a' + i;
-				recPreOrderWithPrint(node->childs[i], c);
-			}
-		}
+		}		
 	}
 }
 
@@ -280,3 +185,86 @@ void TrieTree::recPreOrderWithPrint(Node* node, char c)
 //		//добавляем в очередь всех его потомков
 //	}
 //}
+
+//удалить слово с заданной буквой 
+Node* TrieTree::searchLetter(char c)
+{
+	searchLetterRec(c, root, nullptr, -1, nullptr, -1, ' ');
+	/*for (int i = 0; i < list.getSize(); i++)
+	{
+		pair tempForDeleting = list.deleteElement();
+		Node* temp = tempForDeleting.node;
+		temp->childs[tempForDeleting.index] = nullptr;
+	}*/
+	return nullptr;
+}
+
+void TrieTree::deleteTree()
+{
+	deleteNode(root);
+}
+
+void TrieTree::deleteNode(Node* node)
+{
+	if (node != nullptr) {
+
+		for (int i = 0; i < alphabetLettersNum; i++)
+		{
+			if (node->childs[i] != nullptr) {
+				deleteNode(node->childs[i]);
+			}
+		}
+		delete node;
+	}
+}
+
+void TrieTree::searchLetterRec(char searchedChar, Node* node, Node* lastForkNode, int lastForkNodeChild,
+	Node* parentNode, int parentNodeChild, char childChar)
+{
+
+	if (node != nullptr) {
+		//проверим что узел являеся развилкой
+		bool isFork = false;
+		int childsCount = 0;
+		for (int i = 0; i < alphabetLettersNum; i++)
+		{
+			if (node->childs[i] != nullptr) {
+				childsCount++;
+				if (childsCount == 2) {
+					isFork = true;
+					break;
+				}
+			}
+		}
+
+
+		if (childChar == searchedChar) {
+			//мы нашли нужную букву и удаляем всё что ниже 
+			deleteNode(node);
+			parentNode->childs[parentNodeChild] = nullptr;
+		}
+		else {
+			bool wasFounded = false;
+			for (int i = 0; i < alphabetLettersNum; i++)
+			{
+				if (node->childs[i] != nullptr) {
+					wasFounded = true;
+					if (isFork) {
+						lastForkNode = node;
+						lastForkNodeChild = i;
+					}
+					childChar = 'a' + i;
+					searchLetterRec(searchedChar, node->childs[i], lastForkNode, lastForkNodeChild, node, i, childChar);
+
+					//если у узла не будет потомков, но при этом isEnd == false, удаляем всё, что ниже fork узла
+					if (!node->hasChilds(1) && node->isEnd == false) {
+						deleteNode(lastForkNode->childs[lastForkNodeChild]);
+						parentNode->childs[parentNodeChild] = nullptr;
+						return;
+					}
+				}
+			}
+		}
+	}
+
+}

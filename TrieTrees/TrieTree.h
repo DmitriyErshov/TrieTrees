@@ -25,7 +25,7 @@ private:
 	void searchLetterRec(char searchedChar, Node* node, Node* lastForkNode, int lastForkNodeChild, Node* parentNode, int parentNodeChild, char childChar);
 	void printGraphic(Node* node, int h);
 	void addRec(string key, int index, Node* tempNode);
-	void recPreOrderWithPrint(Node* node, char c);
+	void recPreOrderWithPrint(Node* node, char c, string prefix);
 
 };
 
