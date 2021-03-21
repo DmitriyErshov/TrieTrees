@@ -3,7 +3,8 @@
 void TrieTree::add(string key)
 {
 	addRec(key, 0, root);
-
+	
+	//обновление высоты дерева
 	if (key.length() > height) {
 		height = key.length();
 	}
@@ -17,98 +18,39 @@ void TrieTree::print()
 
 void TrieTree::printGraphic()
 {
+	SetColor(14, 0);
 	char c = ' ';
 	printGraphic(root, height + 1);
 }
 
-void TrieTree::nicePrintGraphic()
+void TrieTree::printGraphic(Node* node, int h)
 {
-	//очередь узлов
-	Queue treeNodes;
-
-	//узел - разделитель потомков
-	Node* nodeDivider = new Node();
-	nodeDivider->s = '*';
-
-	//количество групп потомков разных узлов на предыдущем уровне и на нынешнем
-	int nodesOnLevel1 = 0, nodesOnLevel2 = 0;
-
-
-	//инициализация 
-	for (int i = 0; i < alphabetLettersNum; i++)
+	if (node != NULL)
 	{
-		if (root->childs[i] != nullptr) {
-			treeNodes.push(root->childs[i]);
-			nodesOnLevel1++;
-			treeNodes.push(nodeDivider);
-		}
-	}
-	treeNodes.push(nullptr);
+		for (int i = 0; i < alphabetLettersNum; i++)
+		{
+			if (node->childs[i] != nullptr) {
+				char c = 'a' + i;
+				printGraphic(node->childs[i], h + 1);
 
-	Queue nodesForPrint;
+				for (int i = 1; i <= h; i++)
+					cout << '\t';
 
-	bool flag = false;
-
-	while (!treeNodes.isEmpty()) {
-		//достаём из очереди узел
-		Node* tempNode = treeNodes.front();
-
-		//int nodesOnLevel = treeNodes.size() - 1;
-
-		if (tempNode == nullptr) {
-			cout << endl;
-			if (treeNodes.size() > 1)
-				treeNodes.push(nullptr);
-			nodesOnLevel1 = nodesOnLevel2;
-			nodesOnLevel2 = 0;
-		}
-		else if (tempNode == nodeDivider) {
-			int n = nodesForPrint.size();
-			int k = 80 / nodesOnLevel1;
-
-			while (!nodesForPrint.isEmpty()) {
-				Node* tempNode = nodesForPrint.front();
-				nodesForPrint.pop();
-	
-				for (int i = 1; i <= int(k / (n + 1)); i++)
-					cout << ' ';
-
-				if (nodesOnLevel1 == 3) {
-					for (int i = 1; i <= 4; i++)
-						cout << ' ';
+				if (node->childs[i]->isEnd) {
+					SetColor(9, 0);
 				}
-
-				cout << tempNode->s;
+				
+				cout << c << endl;
+				
+					
+				SetColor(14, 0);
+				
 			}
-			for (int i = 1; i <= int(k / (n + 1)); i++)
-				cout << ' ';
-			
-			cout << '*';
 		}
-		else {
-			
-			
-			/*for (int i = 1; i <= 50 / nodesOnLevel; i++)
-				cout << ' ';*/
-
-			//cout << tempNode->s;
-			nodesForPrint.push(tempNode);
-
-			for (int i = 0; i < alphabetLettersNum; i++)
-			{
-				if (tempNode->childs[i] != nullptr) {
-					treeNodes.push(tempNode->childs[i]);
-				}
-			}
-			nodesOnLevel2++;
-			treeNodes.push(nodeDivider);
-			
-		}
-		
-		treeNodes.pop();
-		//добавляем в очередь всех его потомков
 	}
 }
+
+
 
 Node* TrieTree::searchLetter(char c)
 {
@@ -130,7 +72,7 @@ void TrieTree::deleteTree()
 void TrieTree::deleteNode(Node* node)
 {
 	if (node != nullptr) {
-		//проверим что узел являеся развилкой
+		
 		for (int i = 0; i < alphabetLettersNum; i++)
 		{
 			if (node->childs[i] != nullptr) {
@@ -165,9 +107,6 @@ void TrieTree::searchLetterRec(char searchedChar, Node* node, Node* lastForkNode
 			//мы нашли нужную букву и удаляем всё что ниже 
 			deleteNode(node);
 			parentNode->childs[parentNodeChild] = nullptr;
-			//добавляем forkNode в список на расстрел
-			//list.add(lastForkNode, lastForkNodeChild);
-			//return;
 		}
 		else {
 			bool wasFounded = false;
@@ -195,24 +134,6 @@ void TrieTree::searchLetterRec(char searchedChar, Node* node, Node* lastForkNode
 	
 }
 
-void TrieTree::printGraphic(Node* node, int h)
-{
-	if (node != NULL)
-	{
-		for (int i = 0; i < alphabetLettersNum; i++)
-		{
-			if (node->childs[i] != nullptr) {
-				char c = 'a' + i;
-				printGraphic(node->childs[i], h + 1);
-
-				for (int i = 1; i <= h; i++)
-					cout << '\t';
-
-				cout << c << endl;
-			}
-		}
-	}
-}
 
 void TrieTree::addRec(string key, int index, Node* tempNode)
 {
@@ -221,8 +142,9 @@ void TrieTree::addRec(string key, int index, Node* tempNode)
 	//проверяем достигнут ли конец ключа
 	if (index + 1 == key.length()) {
 		tempNode->childs[insertIndex] = new Node();
-		tempNode->childs[insertIndex]->s = key[index];
+		//tempNode->childs[insertIndex]->s = key[index];
 		tempNode->childs[insertIndex]->isEnd = true;
+		tempNode->counter++;
 		return;
 	}
 	else {
@@ -241,7 +163,7 @@ void TrieTree::addRec(string key, int index, Node* tempNode)
 		}
 		else {
 			tempNode->childs[insertIndex] = new Node();
-			tempNode->childs[insertIndex]->s = key[index];
+			//tempNode->childs[insertIndex]->s = key[index];
 			addRec(key, index + 1, tempNode->childs[insertIndex]);
 		}
 
@@ -269,3 +191,92 @@ void TrieTree::recPreOrderWithPrint(Node* node, char c)
 		}
 	}
 }
+
+//void TrieTree::nicePrintGraphic()
+//{
+//	//очередь узлов
+//	Queue treeNodes;
+//
+//	//узел - разделитель потомков
+//	Node* nodeDivider = new Node();
+//	nodeDivider->s = '*';
+//
+//	//количество групп потомков разных узлов на предыдущем уровне и на нынешнем
+//	int nodesOnLevel1 = 0, nodesOnLevel2 = 0;
+//
+//
+//	//инициализация 
+//	for (int i = 0; i < alphabetLettersNum; i++)
+//	{
+//		if (root->childs[i] != nullptr) {
+//			treeNodes.push(root->childs[i]);
+//			nodesOnLevel1++;
+//			treeNodes.push(nodeDivider);
+//		}
+//	}
+//	treeNodes.push(nullptr);
+//
+//	Queue nodesForPrint;
+//
+//	bool flag = false;
+//
+//	while (!treeNodes.isEmpty()) {
+//		//достаём из очереди узел
+//		Node* tempNode = treeNodes.front();
+//
+//		//int nodesOnLevel = treeNodes.size() - 1;
+//
+//		if (tempNode == nullptr) {
+//			cout << endl;
+//			if (treeNodes.size() > 1)
+//				treeNodes.push(nullptr);
+//			nodesOnLevel1 = nodesOnLevel2;
+//			nodesOnLevel2 = 0;
+//		}
+//		else if (tempNode == nodeDivider) {
+//			int n = nodesForPrint.size();
+//			int k = 80 / nodesOnLevel1;
+//
+//			while (!nodesForPrint.isEmpty()) {
+//				Node* tempNode = nodesForPrint.front();
+//				nodesForPrint.pop();
+//
+//				for (int i = 1; i <= int(k / (n + 1)); i++)
+//					cout << ' ';
+//
+//				if (nodesOnLevel1 == 3) {
+//					for (int i = 1; i <= 4; i++)
+//						cout << ' ';
+//				}
+//
+//				cout << tempNode->s;
+//			}
+//			for (int i = 1; i <= int(k / (n + 1)); i++)
+//				cout << ' ';
+//
+//			//cout << '*';
+//		}
+//		else {
+//
+//
+//			/*for (int i = 1; i <= 50 / nodesOnLevel; i++)
+//				cout << ' ';*/
+//
+//				//cout << tempNode->s;
+//			nodesForPrint.push(tempNode);
+//
+//			for (int i = 0; i < alphabetLettersNum; i++)
+//			{
+//				if (tempNode->childs[i] != nullptr) {
+//					treeNodes.push(tempNode->childs[i]);
+//				}
+//			}
+//			nodesOnLevel2++;
+//			treeNodes.push(nodeDivider);
+//
+//		}
+//
+//		treeNodes.pop();
+//		//добавляем в очередь всех его потомков
+//	}
+//}

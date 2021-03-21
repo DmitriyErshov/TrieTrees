@@ -9,7 +9,6 @@ class TrieTree
 {
 private:
 	Node* root;
-	NodeList list;
 	int height = 0;
 public:
 	TrieTree() {
@@ -18,7 +17,7 @@ public:
 	void add(string key);
 	void print();
 	void printGraphic();
-	void nicePrintGraphic();
+	//void nicePrintGraphic();
 	Node* searchLetter(char c);
 	void deleteTree();
 private:

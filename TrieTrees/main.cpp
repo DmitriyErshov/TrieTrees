@@ -19,12 +19,11 @@ int main() {
 	trieTree.add("into");*/
 	/*trieTree.printGraphic();
 	
-	trieTree.searchLetter('f');
-	*/
-	//cout << "____________________________________________________________" << endl;
-	//trieTree.printGraphic();
 	
-	trieTree.nicePrintGraphic();
+	*/
+	//
+	trieTree.printGraphic();
+	
 
 	return 0;
 }
